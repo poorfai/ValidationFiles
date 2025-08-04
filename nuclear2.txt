@@ -1,0 +1,14 @@
+C:/Python/_Blocks
+1.0
+MK_Nuclear_SOP_a11
+MK_Nuclear_SOP_a21
+MK_Nuclear_Table_header_a01
+MK_Nuclear_Table_header_b01
+MK_Nuclear_Table_Content_a01
+MK_Nuclear_Table_Content_a02
+MK_Nuclear_Table_Content_a03
+__VSL-Temp Layer
+TABLE
+OFFSET DATA
+0.95
+0.2
