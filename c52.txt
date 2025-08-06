@@ -1,3 +1,35 @@
+db = Db.curDb()
+initsetting(db)
+Origin_360 = getBlockOrigin()[0]
+Origin_0 = getBlockOrigin()[1]
+kScale1 = 1.0
+
+mode = "horizontal"
+
+# if not isInit:
+#     print(f"\nPlease use command 'nucinit' to initialize the setting variables first ! ")
+#     return
+# ----------------------------------------
+# ps, i = Ed.Editor.getInteger("\nEnter Table Scale (Default is 1) : ")
+# if ps == Ed.PromptStatus.eNormal:
+#     kScale1 = i
+tName = getTendonName()
+
+# ----------------------------------------
+# execCode("c51.txt")
+# ----------------------------------------
+filter = [(Db.DxfCode.kDxfStart, "INSERT"),
+            (2, (btr11Name+","+btr21Name))]
+ps, ss = Ed.Editor.selectAll(filter)
+
+if ps != Ed.PromptStatus.eNormal:
+    raise Exception(ps)
+ssIds = ss.objectIds()
+# ----------------------------------------
+
+TendonPos = []
+PtIds = []
+
 for id in ssIds:
     bRef = Db.BlockReference(id)
     btrId = Db.BlockReference(id).blockTableRecord()
@@ -15,3 +47,98 @@ for id in ssIds:
 
 TendonPos = natsorted(TendonPos, key=lambda item: item[0])
 PtIds = natsorted(PtIds, key=lambda item: item[0])
+
+if len(PtIds) == 0:
+    print(f"\nNo point found for selected Tendon '{tName}'.")
+    return
+
+if not PtIds[0][0].casefold() == "1".casefold():
+    print(f"\nNo point '1' found for selected Tendon '{tName}'.")
+    return
+
+# ----------------------------------------
+ps, ptBase = Ed.Editor.getPoint("\nSpecify Location to place Table (Top Left) : ")
+if ps != Ed.PromptStatus.eOk:
+    return
+ptBase[2] = 0
+
+
+# ----------------------------------------
+# execCode("c52.txt")
+# ----------------------------------------
+
+# #--- Table Header
+if mode == "horizontal":
+    bRefId = MyLib.InsertBlock(db, "", ptBase, btr91Name, kScale1)
+    bref1 = Db.BlockReference(bRefId, Db.OpenMode.kForWrite)
+    bref1.setLayer(str(layName01))
+    bref1.downgradeOpen()
+    MyLib.UpdateAtt(bRefId, "TENDON", tName)
+    MyLib.UpdateAtt(bRefId, "LVL", fif(PtIds[0][2]))
+elif mode == "vertical":
+    bRefId = MyLib.InsertBlock(db, "", ptBase, btr81Name, kScale1)
+    bref1 = Db.BlockReference(bRefId, Db.OpenMode.kForWrite)
+    bref1.setLayer(str(layName01))
+    bref1.downgradeOpen()
+    MyLib.UpdateAtt(bRefId, "TENDON", tName)
+    MyLib.UpdateAtt(bRefId, "AZIMUTH", dms(getAzimuth(PtIds[0][1])))
+
+
+
+
+#--- Table content
+
+pos1 = ptBase.y - kScale1 * (kHeaderHeight + kContentHeight * (len(PtIds)-1))
+idx1 = bisect.bisect_left(TendonPos, PtIds[0][1], key=lambda item: item[0])
+
+pt = Ge.Point3d(ptBase.x, pos1, 0)
+bRefId = MyLib.InsertBlock(db, "", pt, btr84Name, kScale1)
+bref1 = Db.BlockReference(bRefId, Db.OpenMode.kForWrite)
+bref1.setLayer(str(layName01))
+bref1.downgradeOpen()
+
+for i in range(0, len(PtIds)):
+
+    tendonX = PtIds[i][1]
+    tendonLvl = PtIds[i][2]
+    pos2 = ptBase.y - kScale1 * (kHeaderHeight + kContentHeight * (len(PtIds)-i-1))
+    idx2 = bisect.bisect_left(TendonPos, tendonX, key=lambda item: item[0])
+
+    pt = Ge.Point3d(ptBase.x, pos2, 0)
+    bRefId = MyLib.InsertBlock(db, "", pt, btr82Name, kScale1)
+    bref1 = Db.BlockReference(bRefId, Db.OpenMode.kForWrite)
+    bref1.setLayer(str(layName01))
+    bref1.downgradeOpen()
+    MyLib.UpdateAtt(bRefId, "ID", PtIds[i][0])
+    MyLib.UpdateAtt(bRefId, "LVL", fif(tendonLvl-Origin_360.y))
+
+    MyLib.UpdateAtt(bRefId, "DRIGHT", fif(PtIds[i][1] - TendonPos[idx2-1][0]))
+    MyLib.UpdateAtt(bRefId, "DLEFT", fif(-1 * (PtIds[i][1] - TendonPos[idx2][0])))
+
+    if idx2 != idx1 :
+        pt = Ge.Point3d(ptBase.x, pos2, 0)
+        bRefId = MyLib.InsertBlock(db, "", pt, btr84Name, kScale1)
+        bref1 = Db.BlockReference(bRefId, Db.OpenMode.kForWrite)
+        bref1.setLayer(str(layName01))
+        bref1.downgradeOpen()
+
+        pos3 = (pos2 + pos1) / 2 - kScale1 * kContentHeight
+        pt = Ge.Point3d(ptBase.x, pos3, 0)
+        bRefId = MyLib.InsertBlock(db, "", pt, btr83Name, kScale1)
+        bref1 = Db.BlockReference(bRefId, Db.OpenMode.kForWrite)
+        bref1.setLayer(str(layName01))
+        bref1.downgradeOpen()
+        MyLib.UpdateAtt(bRefId, "TENDON_RIGHT", TendonPos[idx1-1][1])
+        MyLib.UpdateAtt(bRefId, "TENDON_LEFT", TendonPos[idx1][1])
+        
+        pos1 = pos2
+    idx1 = idx2
+
+pos3 = (pos2 + pos1- kScale1 * kContentHeight) / 2 
+pt = Ge.Point3d(ptBase.x, pos3, 0)
+bRefId = MyLib.InsertBlock(db, "", pt, btr83Name, kScale1)
+bref1 = Db.BlockReference(bRefId, Db.OpenMode.kForWrite)
+bref1.setLayer(str(layName01))
+bref1.downgradeOpen()
+MyLib.UpdateAtt(bRefId, "TENDON_RIGHT", TendonPos[idx1-1][1])
+MyLib.UpdateAtt(bRefId, "TENDON_LEFT", TendonPos[idx1][1])
