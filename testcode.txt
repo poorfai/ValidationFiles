@@ -1,8 +1,9 @@
-    pos1 = ptBase.y - kScale1 * (kHeaderHeight + kContentHeight * (len(PtIds)-1))
-    idx1 = bisect.bisect_left(TendonPos, PtIds[0][1], key=lambda item: item[0])
+pos1 = ptBase.y - kScale1 * (kHeaderHeight + kContentHeight * (len(PtIds)-1))
+idx1 = bisect.bisect_left(TendonPos, PtIds[0][1], key=lambda item: item[0])
 
-    pt = Ge.Point3d(ptBase.x, pos1, 0)
-    bRefId = MyLib.InsertBlock(db, "", pt, btr84Name, kScale1)
-    bref1 = Db.BlockReference(bRefId, Db.OpenMode.kForWrite)
-    bref1.setLayer(str(layName01))
-    bref1.downgradeOpen()
+pt = Ge.Point3d(ptBase.x, pos1, 0)
+bRefId = MyLib.InsertBlock(db, "", pt, btr84Name, kScale1)
+bref1 = Db.BlockReference(bRefId, Db.OpenMode.kForWrite)
+bref1.setLayer(str(layName01))
+bref1.downgradeOpen()
+
