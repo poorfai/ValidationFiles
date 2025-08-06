@@ -1,0 +1,7 @@
+filter = [(Db.DxfCode.kDxfStart, "INSERT"),
+            (2, (btr11Name+","+btr21Name))]
+ps, ss = Ed.Editor.selectAll(filter)
+
+if ps != Ed.PromptStatus.eNormal:
+    raise Exception(ps)
+ssIds = ss.objectIds()
