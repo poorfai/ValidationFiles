@@ -1,0 +1,13 @@
+kBlkPath = r"C:/Python/_Blocks"
+btr11Name = "MK_Nuclear_SOP_a11"
+btr21Name = "MK_Nuclear_SOP_a21"
+btr81Name = "MK_Nuclear_Table_header_a01"
+btr91Name = "MK_Nuclear_Table_header_b01"
+btr82Name = "MK_Nuclear_Table_Content_a01"
+btr83Name = "MK_Nuclear_Table_Content_a02"
+btr84Name = "MK_Nuclear_Table_Content_a03"
+layName00 = "__VSL-Temp Layer"
+layName01 = "TABLE"
+layName02 = "OFFSET DATA"
+kHeaderHeight = 0.95
+kContentHeight = 0.2
