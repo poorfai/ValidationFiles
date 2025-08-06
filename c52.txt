@@ -1,6 +1,17 @@
-bref1 = Db.BlockReference(bRefId, Db.OpenMode.kForWrite)
-bref1.setLayer(str(layName01))
-bref1.downgradeOpen()
-MyLib.UpdateAtt(bRefId, "TENDON", tName)
-MyLib.UpdateAtt(bRefId, "LVL", fif(PtIds[0][2]))
+for id in ssIds:
+    bRef = Db.BlockReference(id)
+    btrId = Db.BlockReference(id).blockTableRecord()
+    # btr = Db.BlockTableRecord(btrId)
+    if bRef.getBlockName() == btr11Name:
+        posX = bRef.position().x
+        tendonName = MyLib.GetAtt(id, "TENDON")
+        if not tendonName.casefold() == 'origin':
+            TendonPos.append([posX, tendonName])
+    if bRef.getBlockName() == btr21Name:
+        if MyLib.GetAtt(id, "TENDON").casefold() == tName.casefold():
+            PtIds.append([MyLib.GetAtt(id, "ID"),
+                                bRef.position().x,
+                                bRef.position().y,])
 
+TendonPos = natsorted(TendonPos, key=lambda item: item[0])
+PtIds = natsorted(PtIds, key=lambda item: item[0])
