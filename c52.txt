@@ -1,6 +1,6 @@
-bRefId = MyLib.InsertBlock(db, "", ptBase, btr91Name, kScale1)
 bref1 = Db.BlockReference(bRefId, Db.OpenMode.kForWrite)
 bref1.setLayer(str(layName01))
 bref1.downgradeOpen()
 MyLib.UpdateAtt(bRefId, "TENDON", tName)
 MyLib.UpdateAtt(bRefId, "LVL", fif(PtIds[0][2]))
+
