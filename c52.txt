@@ -140,7 +140,8 @@ bRefId = MyLib.InsertBlock(db, "", pt, btr83Name, kScale1)
 bref1 = Db.BlockReference(bRefId, Db.OpenMode.kForWrite)
 bref1.setLayer(str(layName01))
 bref1.downgradeOpen()
+bref1.close()
 MyLib.UpdateAtt(bRefId, "TENDON_RIGHT", TendonPos[idx1-1][1])
 MyLib.UpdateAtt(bRefId, "TENDON_LEFT", TendonPos[idx1][1])
 
-quit()
+
