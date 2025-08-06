@@ -142,3 +142,5 @@ bref1.setLayer(str(layName01))
 bref1.downgradeOpen()
 MyLib.UpdateAtt(bRefId, "TENDON_RIGHT", TendonPos[idx1-1][1])
 MyLib.UpdateAtt(bRefId, "TENDON_LEFT", TendonPos[idx1][1])
+
+quit()
