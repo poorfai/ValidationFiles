@@ -1,0 +1,14 @@
+if mode == "horizontal":
+    bRefId = MyLib.InsertBlock(db, "", ptBase, btr91Name, kScale1)
+    bref1 = Db.BlockReference(bRefId, Db.OpenMode.kForWrite)
+    bref1.setLayer(str(layName01))
+    bref1.downgradeOpen()
+    MyLib.UpdateAtt(bRefId, "TENDON", tName)
+    MyLib.UpdateAtt(bRefId, "LVL", fif(PtIds[0][2]))
+elif mode == "vertical":
+    bRefId = MyLib.InsertBlock(db, "", ptBase, btr81Name, kScale1)
+    bref1 = Db.BlockReference(bRefId, Db.OpenMode.kForWrite)
+    bref1.setLayer(str(layName01))
+    bref1.downgradeOpen()
+    MyLib.UpdateAtt(bRefId, "TENDON", tName)
+    MyLib.UpdateAtt(bRefId, "AZIMUTH", dms(getAzimuth(PtIds[0][1])))
