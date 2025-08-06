@@ -50,16 +50,16 @@ PtIds = natsorted(PtIds, key=lambda item: item[0])
 
 if len(PtIds) == 0:
     print(f"\nNo point found for selected Tendon '{tName}'.")
-    return
+    quit()
 
 if not PtIds[0][0].casefold() == "1".casefold():
     print(f"\nNo point '1' found for selected Tendon '{tName}'.")
-    return
+    quit()
 
 # ----------------------------------------
 ps, ptBase = Ed.Editor.getPoint("\nSpecify Location to place Table (Top Left) : ")
 if ps != Ed.PromptStatus.eOk:
-    return
+    quit()
 ptBase[2] = 0
 
 
