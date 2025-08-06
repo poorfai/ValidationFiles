@@ -1,9 +1,10 @@
-pos1 = ptBase.y - kScale1 * (kHeaderHeight + kContentHeight * (len(PtIds)-1))
-idx1 = bisect.bisect_left(TendonPos, PtIds[0][1], key=lambda item: item[0])
+filter = [(Db.DxfCode.kDxfStart, "INSERT"),
+            (2, (btr11Name+","+btr21Name))]
+ps, ss = Ed.Editor.selectAll(filter)
 
-pt = Ge.Point3d(ptBase.x, pos1, 0)
-bRefId = MyLib.InsertBlock(db, "", pt, btr84Name, kScale1)
-bref1 = Db.BlockReference(bRefId, Db.OpenMode.kForWrite)
-bref1.setLayer(str(layName01))
-bref1.downgradeOpen()
+if ps != Ed.PromptStatus.eNormal:
+    raise Exception(ps)
+ssIds = ss.objectIds()
 
+TendonPos = []
+PtIds = []
